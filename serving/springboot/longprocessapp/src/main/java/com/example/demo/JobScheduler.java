@@ -1,9 +1,9 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +21,8 @@ public class JobScheduler {
     public void startJob() {
         startTime = LocalDateTime.now();
         jobRunning = true;
+
+        // Simulate sending a Slack message
         sendSlackMessage("Job is started at " + startTime.format(dtFormatter));
 
         new Thread(() -> {
@@ -44,9 +46,11 @@ public class JobScheduler {
 
     public String getJobInfo() {
         if (jobRunning) {
-            long elapsedSeconds = TimeUnit.SECONDS.convert(LocalDateTime.now().minusSeconds(startTime.toEpochSecond() - LocalDateTime.now().toEpochSecond()), TimeUnit.SECONDS);
-            long minutes = elapsedSeconds / 60;
-            long seconds = elapsedSeconds % 60;
+            // Calculate elapsed time using Duration
+            Duration elapsed = Duration.between(startTime, LocalDateTime.now());
+            long minutes = elapsed.toMinutes();
+            long seconds = elapsed.getSeconds() % 60; // Get remaining seconds after minutes
+            
             return String.format("Start time: %s, Elapsed time: %d:%02d, Complete duration: %d:%02d",
                     startTime.format(dtFormatter), minutes, seconds, completeDuration / 60, completeDuration % 60);
         }
