@@ -13,12 +13,9 @@ public class JobController {
 
     @GetMapping("/start")
     public String startJob() {
-        jobScheduler.startJob();
-        return "Job is starting...";
-    }
-
-    @GetMapping("/status")
-    public String getJobStatus() {
+        if(!jobScheduler.isJobRunning()){
+            jobScheduler.startJob();
+        }
         return jobScheduler.getJobInfo();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,12 @@ public class JobScheduler {
     @Value("${complete.duration}")
     private long completeDuration; // in seconds
 
+    @Value("${spring.application.name}")
+    private String applicationName;
+
+    @Autowired
+    private SlackService slackService; 
+
     private LocalDateTime startTime;
     private boolean jobRunning = false;
 
@@ -23,7 +30,7 @@ public class JobScheduler {
         jobRunning = true;
 
         // Simulate sending a Slack message
-        sendSlackMessage("Job is started at " + startTime.format(dtFormatter));
+        sendSlackMessage(applicationName + " is started at " + startTime.format(dtFormatter));
 
         new Thread(() -> {
             try {
@@ -40,10 +47,13 @@ public class JobScheduler {
 
     public void completeJob() {
         jobRunning = false;
-        sendSlackMessage("Job is completed at " + LocalDateTime.now().format(dtFormatter));
+        String totalProcessTime= String.format("Totoal Process Time: %d:%02d", completeDuration / 60, completeDuration % 60);
+        sendSlackMessage(applicationName + " is completed at " + LocalDateTime.now().format(dtFormatter) + " " + totalProcessTime);
         System.exit(0); // Exit the application
     }
-
+    public boolean isJobRunning() {
+        return jobRunning;
+    }
     public String getJobInfo() {
         if (jobRunning) {
             // Calculate elapsed time using Duration
@@ -59,6 +69,7 @@ public class JobScheduler {
 
     private void sendSlackMessage(String message) {
         // Implement the code to send a message to Slack here
-        System.out.println("Sending to Slack: " + message);
+        slackService.sendMessage(message);
+
     }
 }
