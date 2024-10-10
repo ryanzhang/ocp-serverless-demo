@@ -14,7 +14,7 @@ TAG ?= latest
 # Target to build the Docker image
 image:
 	@echo "Building Docker image..."
-	podman build -f $(DOCKERFILE_PATH) -t $(IMAGE_NAME):$(TAG) $(CONTEXT)
+	podman build --platform linux/amd64 -f $(DOCKERFILE_PATH) -t $(IMAGE_NAME):$(TAG) $(CONTEXT)
 	podman tag $(IMAGE_NAME):$(TAG) $(IMAGE_NAME):latest
 	@echo "Docker image built and tagged as $(IMAGE_NAME):$(TAG)"
 

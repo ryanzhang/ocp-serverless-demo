@@ -30,7 +30,7 @@ public class JobScheduler {
         jobRunning = true;
 
         // Simulate sending a Slack message
-        sendSlackMessage(applicationName + " is started at " + startTime.format(dtFormatter));
+        sendSlackMessage(applicationName + " Job is started at " + startTime.format(dtFormatter));
 
         new Thread(() -> {
             try {
@@ -48,8 +48,8 @@ public class JobScheduler {
     public void completeJob() {
         jobRunning = false;
         String totalProcessTime= String.format("Totoal Process Time: %d:%02d", completeDuration / 60, completeDuration % 60);
-        sendSlackMessage(applicationName + " is completed at " + LocalDateTime.now().format(dtFormatter) + " " + totalProcessTime);
-        System.exit(0); // Exit the application
+        sendSlackMessage(applicationName + " Job is completed at " + LocalDateTime.now().format(dtFormatter) + " " + totalProcessTime);
+        // System.exit(0); // Exit the application
     }
     public boolean isJobRunning() {
         return jobRunning;
