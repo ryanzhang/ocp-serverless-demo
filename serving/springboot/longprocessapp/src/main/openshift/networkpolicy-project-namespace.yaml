@@ -1,0 +1,39 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-by-default
+  namespace: cathay-pacific-demo
+spec:
+  podSelector:
+  ingres: []
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-knative-system-namespace
+  namespace: cathay-pacific-demo
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          knative.openshift.io/system-namespace: "true"
+  podSelector: {}
+  policyTypes:
+  - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-apigateway-namespace
+  namespace: cathay-pacific-demo
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          knative.openshift.io/apigateway-namespace: "true"
+  podSelector: {}
+  policyTypes:
+  - Ingress
+

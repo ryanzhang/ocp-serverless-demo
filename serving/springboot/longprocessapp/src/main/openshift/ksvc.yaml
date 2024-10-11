@@ -1,0 +1,77 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/route-disabled: "true"
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"longprocessapp:latest","namespace":"cathay-pacific-demo"},"fieldPath":"spec.template.spec.containers[?(@.name==\"longprocessapp\")].image","paused":"false"}]'
+    openshift.io/generated-by: OpenShiftWebConsole
+    serving.knative.dev/creator: admin
+    serving.knative.dev/lastModifier: admin
+  labels:
+    app.kubernetes.io/component: longprocessapp
+    app.kubernetes.io/instance: longprocessapp
+    app.kubernetes.io/name: longprocessapp
+    app.kubernetes.io/part-of: longprocessapp
+    app.openshift.io/runtime: longprocessapp
+    app.openshift.io/runtime-namespace: cathay-pacific-demo
+    app.openshift.io/runtime-version: latest
+  name: longprocessapp
+  namespace: cathay-pacific-demo
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target: "100"
+        autoscaling.knative.dev/target-utilization-percentage: "70"
+        autoscaling.knative.dev/window: 60s
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: longprocessapp
+        app.kubernetes.io/instance: longprocessapp
+        app.kubernetes.io/part-of: longprocessapp
+        app.openshift.io/runtime: longprocessapp
+        app.openshift.io/runtime-namespace: cathay-pacific-demo
+        app.openshift.io/runtime-version: latest
+    spec:
+      containerConcurrency: 0
+      containers:
+      - env:
+        - name: slack_token
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: slack-token
+        - name: TZ
+          value: Asia/Shanghai
+        image: quay.io/rzhang/longprocessapp:v1.2
+        imagePullPolicy: Always
+        name: longprocessapp
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          successThreshold: 1
+          tcpSocket:
+            port: 0
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /app/config
+          name: app-config
+          readOnly: true
+      enableServiceLinks: false
+      timeoutSeconds: 300
+      volumes:
+      - configMap:
+          name: longprocessapp-app-config
+        name: app-config
+  traffic:
+  - latestRevision: true
+    percent: 100

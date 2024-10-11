@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,7 +17,12 @@ public class GracefulShutdown {
 
     @Autowired
     private SlackService slackService; 
-
+    
+    @PostConstruct
+    public void init(){
+        String message = applicationName + " is starting at " + getCurrentTime();
+        slackService.sendMessage(message);
+    }
     public GracefulShutdown() {
         // Add a shutdown hook for normal exits
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

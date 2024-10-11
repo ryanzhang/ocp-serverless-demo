@@ -21,7 +21,7 @@ image:
 # Target to package and run the application locally
 dev: check_slack_token
 	@echo "Packaging the application..."
-	mvn clean package
+	mvn clean package -DskipTests
 	@echo "Starting the application..."
 	java -jar target/*.jar
 

@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  application.properties: |
+    spring.application.name=Long-Process-App
+    complete.duration = 200
+
+    slack.channel.id=ryan-demo-workspace
+
+    management.endpoints.web.exposure.include=health,info,conditions
+    management.endpoint.health.show-details=always
+    management.endpoint.health.enabled=true
+kind: ConfigMap
+metadata:
+  name: longprocessapp-app-config
+  namespace: cathay-pacific-demo

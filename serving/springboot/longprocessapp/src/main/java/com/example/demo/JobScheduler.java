@@ -47,7 +47,7 @@ public class JobScheduler {
 
     public void completeJob() {
         jobRunning = false;
-        String totalProcessTime= String.format("Totoal Process Time: %d:%02d", completeDuration / 60, completeDuration % 60);
+        String totalProcessTime= String.format("Total Process Time: %d:%02d", completeDuration / 60, completeDuration % 60);
         sendSlackMessage(applicationName + " Job is completed at " + LocalDateTime.now().format(dtFormatter) + " " + totalProcessTime);
         // System.exit(0); // Exit the application
     }
