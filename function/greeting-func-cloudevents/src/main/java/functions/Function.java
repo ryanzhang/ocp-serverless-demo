@@ -9,8 +9,6 @@ import jakarta.inject.Inject;
  * Your Function class
  */
 public class Function {
-    @Inject
-    GreetingService service;
 
     /**
      * Use the Quarkus Funq extension for the function. This example
@@ -19,13 +17,12 @@ public class Function {
      * @return a CloudEvent
      */
     @Funq
-    public CloudEvent<Output> function(CloudEvent<Input> input) {
+    public String function(String cloudEventJson) {
 
         // Add your business logic here
 
-        System.out.println(input);
-        Output output = new Output(service.greet(input.data().getMessage()));
-        return CloudEventBuilder.create().build(output);
+        System.out.println(cloudEventJson);
+        return cloudEventJson;
     }
 
 }
