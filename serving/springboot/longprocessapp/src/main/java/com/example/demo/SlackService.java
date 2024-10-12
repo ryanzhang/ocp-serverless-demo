@@ -1,6 +1,8 @@
 package com.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,13 +14,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class SlackService {
 
-    @Value("${slack_token}")
+    @Value("${slack_token:}")
     private String slackToken;
 
     @Value("${slack.channel.id}")
     private String channelId;
 
+   @Autowired
+    private Environment environment;
+
     public void sendMessage(String message) {
+        message = message +  " from " + environment.getProperty("HOSTNAME");
         RestTemplate restTemplate = new RestTemplate();
 
         String url = "https://slack.com/api/chat.postMessage";
