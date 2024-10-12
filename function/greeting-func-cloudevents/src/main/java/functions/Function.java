@@ -3,6 +3,7 @@ package functions;
 import io.quarkus.funqy.Funq;
 import io.quarkus.funqy.knative.events.CloudEvent;
 import io.quarkus.funqy.knative.events.CloudEventBuilder;
+import io.quarkus.funqy.knative.events.CloudEventMapping;
 import jakarta.inject.Inject;
 
 /**
@@ -17,6 +18,7 @@ public class Function {
      * @return a CloudEvent
      */
     @Funq
+    @CloudEventMapping(trigger = "dev.knative.sources.ping", responseSource="quarkus.funqy", responseType="functions.greetingFuncCloudEvents")
     public String function(String cloudEventJson) {
 
         // Add your business logic here
