@@ -7,7 +7,10 @@ import json
 def payload_print(req: Request) -> str:
     if req.method == "POST":
         if req.is_json:
-            return json.dumps(req.json) + "\n"
+            data = req.json
+            if 'message' in data:
+                data['message'] = f"Hi, {data['message']}"
+            return json.dumps(data) + "\n"
         else:
             # MultiDict needs some iteration
             ret = "{"

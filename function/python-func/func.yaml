@@ -1,4 +1,14 @@
 specVersion: 0.36.0
 name: python-func
 runtime: python
+registry: image-registry.openshift-image-registry.svc:5000/cathay-pacific-demo
 created: 2024-10-12T14:00:06.177393+08:00
+build:
+  git:
+    url: https://github.com/ryanzhang/ocp-serverless
+    revision: main
+    contextDir: function/python-func
+  builder: s2i
+deploy:
+  namespace: cathay-pacific-demo
+  image: image-registry.openshift-image-registry.svc:5000/cathay-pacific-demo/python-func:latest
