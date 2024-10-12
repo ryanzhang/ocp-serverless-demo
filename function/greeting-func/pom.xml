@@ -29,6 +29,10 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-funqy-amazon-lambda</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-funqy-knative-events</artifactId>
     </dependency>

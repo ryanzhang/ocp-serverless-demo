@@ -9,7 +9,10 @@ import jakarta.inject.Inject;
 public class Function {
 
     @Inject
-    GreetingService service;
+    GreetingService GreetingService;
+
+    @Inject
+    SecretService SecretService;
 
     /**
      * Use the Quarkus Funqy extension for our function. This function simply echoes its input
@@ -21,7 +24,7 @@ public class Function {
 
         // Add business logic here
 
-        return new Output(service.greet(input.getMessage()));
+        return new Output(GreetingService.greet(input.getMessage()), SecretService.getSecret());
     }
 
 }
