@@ -1,8 +1,14 @@
 specVersion: 0.36.0
 name: greeting-func
 runtime: quarkus
+registry: image-registry.openshift-image-registry.svc:5000/cathay-pacific-demo
 created: 2024-10-12T08:45:13.707093+08:00
 build:
+  git:
+    url: https://github.com/ryanzhang/ocp-serverless
+    revision: main
+    contextDir: function/greeting-func
+  builder: s2i
   buildEnvs:
   - name: BP_NATIVE_IMAGE
     value: "false"
@@ -12,3 +18,6 @@ build:
     value: target/quarkus-app
   - name: S2I_SOURCE_DEPLOYMENTS_FILTER
     value: lib quarkus-run.jar app quarkus
+deploy:
+  namespace: cathay-pacific-demo
+  image: image-registry.openshift-image-registry.svc:5000/cathay-pacific-demo/greeting-func:latest
