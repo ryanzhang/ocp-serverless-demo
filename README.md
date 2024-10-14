@@ -77,8 +77,38 @@ How to verify:
 
 
 ## Use Case 4:  knative Function experience
+knative Function provide dev in local, build in cluster, run in knative serving experience and flexibility
+### Function dev in local
+** Debug like local program ** 
+```bash
+  
+```
+** invoke locally **
+```bash
+function/greeting-func-cloudevents
+kn func invoke -v --target="http://greeting-func-cloudevents.cathay-pacific-demo.svc.cluster.local" -f cloudevent --data="{\"message\":\"Ryan\"}"
+```
+### Function build in cluster
+1. set git config since it 's required find the repo url and subpath when building in cluster 
+```bash
+  kn func config git set
+```
+2. Activate the tekton pipeline
+```bash
+kn func deploy --remote
+```
 
 
+### Run in knative serving
+knative function is deployed as knative serving service
+
+### Deverloper console UI experience
+Good
+
+### Integrate with knative eventing
+
+
+## Use Case 5:  knative Eventing
 
 
 
