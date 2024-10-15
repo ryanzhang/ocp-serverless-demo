@@ -1,0 +1,4 @@
+env.sh
+target/**
+**/*secret.yaml
+
