@@ -1,11 +1,32 @@
 <template>
   <div class="upload-container">
     <h2 class="upload-title">Upload Your Image</h2>
+    
+    <!-- File upload form -->
     <form @submit.prevent="submitUpload">
-        <input type="file" @change="handleFileUpload" class="file-input" accept="image/*" />
-        <button @click="submitUpload" class="upload-button">Submit</button>
+      <input 
+        type="file" 
+        @change="handleFileUpload" 
+        class="file-input" 
+        accept="image/*" 
+        :disabled="isUploading"  
+      />
+      <button 
+        type="submit" 
+        class="upload-button" 
+        :disabled="isUploading"  
+      >
+        {{ isUploading ? 'Uploading...' : 'Submit' }}
+      </button>
     </form>
-    <p v-if="file" class="file-info">{{ file.name }}</p>
+
+    <!-- Show selected file name -->
+    <p v-if="file" class="file-info">
+      Selected File: {{ file.name }}
+    </p>
+    
+    <!-- Show upload status message (success/failure) -->
+    <p v-if="uploadStatus" class="upload-status">{{ uploadStatus }}</p>
   </div>
 </template>
 
@@ -22,6 +43,8 @@ const handleFileUpload = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
     file.value = selectedFile;
+   uploadStatus.value = '';  // Reset the upload status when a new file is selected
+
   }
 };
 
@@ -46,8 +69,10 @@ const submitUpload = async () => {
       },
     });
 
-    uploadStatus.value = `Success: ${response.data.message}`;
+    uploadStatus.value = `${response.data}`;
     console.log('Upload response:', response);  // Log full response for debugging
+    file.value = null;  // Optionally, reset file after successful upload
+
 
   } catch (error) {
     // Detailed error handling
@@ -124,5 +149,22 @@ const submitUpload = async () => {
   margin-top: 10px;
   color: #6c757d;
   font-size: 0.9rem;
+}
+.file-input {
+  margin-top: 20px;
+}
+
+.upload-button {
+  margin-top: 10px;
+}
+
+.upload-status {
+  margin-top: 10px;
+  font-size: 16px;
+  color: green;
+}
+
+.upload-status.error {
+  color: red;
 }
 </style>
