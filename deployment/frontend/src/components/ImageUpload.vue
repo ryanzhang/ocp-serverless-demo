@@ -1,30 +1,74 @@
 <template>
   <div class="upload-container">
     <h2 class="upload-title">Upload Your Image</h2>
-    <input type="file" @change="handleFileUpload" class="file-input" />
-    <button @click="submitUpload" class="upload-button">Submit</button>
+    <form @submit.prevent="submitUpload">
+        <input type="file" @change="handleFileUpload" class="file-input" accept="image/*" />
+        <button @click="submitUpload" class="upload-button">Submit</button>
+    </form>
     <p v-if="file" class="file-info">{{ file.name }}</p>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios';
 
-const file = ref(null)
+const file = ref(null);
+const uploadStatus = ref('');
+const isUploading = ref(false);  // To handle loading state
 
+// Handle file selection
 const handleFileUpload = (event) => {
-  file.value = event.target.files[0]
-}
-
-const submitUpload = () => {
-  if (file.value) {
-    // Handle the file upload logic here
-    console.log('Uploading:', file.value)
-    // You can make an API call or any other action with the file
-  } else {
-    console.error('No file selected for upload.')
+  const selectedFile = event.target.files[0];
+  if (selectedFile) {
+    file.value = selectedFile;
   }
-}
+};
+
+// Submit the selected file for upload
+const submitUpload = async () => {
+  if (!file.value) {
+    uploadStatus.value = 'Please select a file to upload.';
+    return;
+  }
+
+  // Set uploading state and reset status message
+  isUploading.value = true;
+  uploadStatus.value = '';
+
+  const formData = new FormData();
+  formData.append('file', file.value);
+
+  try {
+    const response = await axios.post(import.meta.env.VITE_API_URL + '/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    uploadStatus.value = `Success: ${response.data.message}`;
+    console.log('Upload response:', response);  // Log full response for debugging
+
+  } catch (error) {
+    // Detailed error handling
+    if (error.response) {
+      // Server-side error
+      console.error('Server responded with error:', error.response);
+      uploadStatus.value = `Server Error: ${error.response.status} - ${error.response.data.message || error.response.data}`;
+    } else if (error.request) {
+      // No response received from the server
+      console.error('No response received:', error.request);
+      uploadStatus.value = 'Error: No response from the server. Please check your network or try again later.';
+    } else {
+      // Other errors (e.g., request setup issues)
+      console.error('Error setting up request:', error.message);
+      uploadStatus.value = `Error: ${error.message}`;
+    }
+  } finally {
+    // Reset loading state after completion
+    isUploading.value = false;
+  }
+};
 </script>
 
 <style scoped>

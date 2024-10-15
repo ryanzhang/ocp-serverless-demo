@@ -8,7 +8,7 @@
 import ImageUpload from '../components/ImageUpload.vue';
 
 export default {
-  name: 'HomeView',
+  name: 'UploadView',
   components: {
     ImageUpload,
   },

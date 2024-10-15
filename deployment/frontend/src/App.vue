@@ -12,7 +12,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
       <nav>
         <RouterLink to="/">Upload</RouterLink>
-        <RouterLink to="/about">My Repo</RouterLink>
+        <RouterLink to="/repo">My Repo</RouterLink>
       </nav>
     </div>
   </header>
