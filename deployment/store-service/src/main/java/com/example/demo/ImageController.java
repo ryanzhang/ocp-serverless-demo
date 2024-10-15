@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import com.example.demo.KafkaProducerService;
+import com.example.demo.UploadCompleteEvent;
 
 
 @RestController
@@ -26,10 +31,14 @@ public class ImageController {
     private final String uploadFolder = "upload";
     private final String thumbsFolder = "thumb";
 
-    // @Autowired
+    @Autowired
+    KafkaProducerService kafkaProducerService;
+
+    @Autowired
     public ImageController(S3Client s3Client) {
         this.s3Client = s3Client;
     }
+    
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
@@ -44,6 +53,16 @@ public class ImageController {
                 .bucket(bucketName)
                 .key(uploadFolder + "/" + file.getOriginalFilename())
                 .build());
+
+            // Create and send Kafka event
+            String fileName = file.getOriginalFilename();
+            String fileUrl = theUrl.toString();
+            long fileSize = file.getSize();
+            String uploadTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+
+            UploadCompleteEvent uploadEvent = new UploadCompleteEvent(fileName, fileUrl, fileSize, uploadTime, "uploadComplete");
+
+            kafkaProducerService.sendUploadCompleteEvent(uploadEvent);
             // String publicUrl = theUrl.toString();
             // sendUploadCompleteEvent(publicUrl);
             return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
