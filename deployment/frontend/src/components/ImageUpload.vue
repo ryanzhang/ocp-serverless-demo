@@ -67,6 +67,9 @@ const submitUpload = async () => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      params: {
+        uploadFolder: import.meta.env.VITE_UPLOAD_FOLDER 
+      }
     });
 
     uploadStatus.value = `${response.data}`;
