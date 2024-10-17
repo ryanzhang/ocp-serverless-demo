@@ -23,7 +23,7 @@ const imageRows = ref([])
 // Function to fetch images from the API
 const fetchImages = async () => {
   try {
-    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiUrl = window.env.VITE_API_URL || import.meta.env.VITE_API_URL;
     const response = await fetch(apiUrl + '/fetch_thumbs')
     // const response = await fetch('http://localhost:8080/fetch_thumbs')
 

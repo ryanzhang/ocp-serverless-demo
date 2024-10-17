@@ -62,13 +62,19 @@ const submitUpload = async () => {
   const formData = new FormData();
   formData.append('file', file.value);
 
+  const apiUrl = window.env.VITE_API_URL || import.meta.env.VITE_API_URL;
+  const uploadFolder = window.env.VITE_UPLOAD_FOLDER || import.meta.env.VITE_UPLOAD_FOLDER;
+  console.log(apiUrl);
+  // const apiUrl = window.env.VITE_API_URL ;
+  // const uploadFolder = window.env.VITE_UPLOAD_FOLDER; 
+
   try {
-    const response = await axios.post(import.meta.env.VITE_API_URL + '/upload', formData, {
+    const response = await axios.post(apiUrl + '/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
       params: {
-        uploadFolder: import.meta.env.VITE_UPLOAD_FOLDER 
+        uploadFolder: uploadFolder
       }
     });
 
