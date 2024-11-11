@@ -1,0 +1,14 @@
+kafka:
+  bootstrap_servers: "kafka.galaxy:9092"
+  topic_upload_event: "store-service-upload-complete"
+  topic_process_event: "process-thumb-upload-event"  
+  consumer_group_id: "process-thumbs-group"
+
+store_service:
+  rest_api: "http://localhost:8080/upload"
+  upload_folder: "thumb"
+
+
+thumbnail:
+  width: 100
+  height: 100

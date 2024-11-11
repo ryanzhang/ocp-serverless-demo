@@ -1,0 +1,24 @@
+FROM registry.redhat.io/rhel9/python-39 
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8080
+
+# Set work directory
+WORKDIR /opt/app-root/src
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --upgrade pip && \
+    pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple && \
+    pip wheel --wheel-dir=/opt/app-root/src/wheels -r requirements.txt && \
+    pip install --no-index --find-links=/opt/app-root/src/wheels -r requirements.txt 
+# Copy project files
+COPY . .
+
+# Expose the port your app runs on
+EXPOSE 8080
+
+# Define the default command to run your app
+CMD ["python", "app.py"]
