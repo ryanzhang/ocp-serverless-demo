@@ -1,5 +1,6 @@
 # Logs
 .vscode
+target
 package-lock.json
 *-lock.*
 pnpm-lock.yaml
